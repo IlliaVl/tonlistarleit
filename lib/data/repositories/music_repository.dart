@@ -1,40 +1,33 @@
-import 'package:tonlistarleit/data/data_providers/music_api.dart';
+import 'package:tonlistarleit/common/enums.dart';
 import 'package:tonlistarleit/data/models/album.dart';
 import 'package:tonlistarleit/data/models/album_details.dart';
+import 'package:tonlistarleit/data/models/music_entity.dart';
+import 'package:tonlistarleit/data/repositories/lastfm_repository.dart';
 
 class MusicRepository {
-  MusicRepository({MusicApi? musicApi}) : _musicApi = musicApi ?? MusicApi();
+  MusicRepository({LastfmRepository? lastfmRepository})
+      : _lastfmRepository = lastfmRepository ?? LastfmRepository();
 
-  final MusicApi _musicApi;
+  final LastfmRepository _lastfmRepository;
 
-  Future<List<Album>> getAlbums(String name) async {
-    final responseJson = await _musicApi.getAlbums(name);
-
-    // final albumsJsonList =
-    //     responseJson?['results']?['albummatches']?['album'] as List;
-    final albumsJsonList =
-        responseJson?['results']?['artistmatches']?['artist'] as List;
-    // final albumsJsonList =
-    //     responseJson?['results']?['trackmatches']?['track'] as List;
-
-    if (albumsJsonList.isEmpty) {
-      throw AlbumNotFoundFailure();
-    }
-    return albumsJsonList.map((albumJson) => Album.fromMap(albumJson)).toList();
-  }
+  Future<List<MusicEntity>> getMusicEntities(
+    String searchString,
+    EntityType entityKey,
+  ) async =>
+      await _lastfmRepository.getMusicEntities(searchString, entityKey);
 
   Future<AlbumDetails> getAlbumDetails(Album album) async {
-    final responseJson = await _musicApi.getAlbumDetails(
-      albumName: album.name,
-      artistName: album.artist,
-    );
-
-    final albumDetailsJsonList =
-        responseJson?['results']?['albummatches']?['album'] as List;
-
-    if (albumDetailsJsonList.isEmpty) {
-      throw AlbumNotFoundFailure();
-    }
+    // final responseJson = await _musicApi.getAlbumDetails(
+    //   albumName: album.name,
+    //   artistName: album.artist,
+    // );
+    //
+    // final albumDetailsJsonList =
+    //     responseJson?['results']?['albummatches']?['album'] as List;
+    //
+    // if (albumDetailsJsonList.isEmpty) {
+    //   throw AlbumNotFoundFailure();
+    // }
     return AlbumDetails();
     // return albumsJsonList.map((albumJson) => Album.fromMap(albumJson)).toList();
   }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tonlistarleit/app.dart';
+import 'package:tonlistarleit/data/models/album_raw.dart';
+import 'package:tonlistarleit/data/models/music_entity_raw.dart';
+import 'package:tonlistarleit/data/models/track_raw.dart';
 import 'package:tonlistarleit/data/repositories/music_repository.dart';
 import 'package:tonlistarleit/presentation/home_screen.dart';
 
@@ -11,6 +14,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final trackRaw = TrackRaw.fromMap({'name': 'track1', 'artist': 'artist1'});
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -27,5 +31,9 @@ class MyApp extends StatelessWidget {
       ),
       home: const HomeScreen(title: 'Flutter Demo Home Page'),
     );
+  }
+
+  test(MusicEntityRaw musicEntityRaw) {
+    final key = musicEntityRaw.key1;
   }
 }

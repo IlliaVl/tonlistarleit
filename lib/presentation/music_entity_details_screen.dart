@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tonlistarleit/logic/album_details_cubit.dart';
 
-class AlbumDetailsScreen extends StatelessWidget {
-  const AlbumDetailsScreen({Key? key}) : super(key: key);
+class MusicEntityDetailsScreen extends StatelessWidget {
+  const MusicEntityDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

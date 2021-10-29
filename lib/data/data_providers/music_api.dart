@@ -46,6 +46,35 @@ class MusicApi {
     return bodyJson;
   }
 
+  Future<Map<String, dynamic>?> getMusicEntities(
+    String searchText,
+    String entityKey,
+  ) async {
+    final request = Uri.https(
+      _baseUrl,
+      '/2.0/',
+      {
+        'method': '$entityKey.search',
+        entityKey: searchText,
+        'api_key': _apiKey,
+        'format': 'json'
+      },
+    );
+    final response = await _httpClient.get(request);
+
+    if (response.statusCode != 200) {
+      throw AlbumRequestFailure();
+    }
+
+    final bodyJson = jsonDecode(response.body) as Map<String, dynamic>;
+
+    if (bodyJson.isEmpty) {
+      throw AlbumNotFoundFailure();
+    }
+
+    return bodyJson;
+  }
+
   Future<Map<String, dynamic>?> getAlbumDetails({
     required String albumName,
     required String artistName,

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tonlistarleit/data/repositories/music_repository.dart';
-import 'package:tonlistarleit/logic/music_cubit.dart';
+import 'package:tonlistarleit/logic/music_entities_cubit.dart';
+import 'package:tonlistarleit/logic/music_entity_type_cubit.dart';
 import 'package:tonlistarleit/presentation/home_screen.dart';
 
 class MusicApp extends StatelessWidget {
@@ -20,8 +21,15 @@ class MusicApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: BlocProvider(
-          create: (context) => MusicCubit(context.read<MusicRepository>()),
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider<MusicEntitiesCubit>(
+              create: (context) => MusicEntitiesCubit(context.read<MusicRepository>()),
+            ),
+            BlocProvider<MusicEntityTypeCubit>(
+              create: (context) => MusicEntityTypeCubit(),
+            ),
+          ],
           child: const HomeScreen(title: 'Flutter Demo Home Page'),
         ),
       ),

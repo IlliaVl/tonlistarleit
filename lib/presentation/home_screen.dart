@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tonlistarleit/common/enums.dart';
 import 'package:tonlistarleit/data/repositories/music_repository.dart';
 import 'package:tonlistarleit/logic/album_details_cubit.dart' as adc;
-import 'package:tonlistarleit/logic/music_cubit.dart';
-import 'package:tonlistarleit/presentation/album_details_screen.dart';
+import 'package:tonlistarleit/logic/music_entities_cubit.dart';
+import 'package:tonlistarleit/logic/music_entity_type_cubit.dart';
+import 'package:tonlistarleit/presentation/music_entity_details_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key, required this.title}) : super(key: key);
@@ -24,20 +26,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _counter = 0;
-
   final _searchController = TextEditingController();
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,47 +45,64 @@ class _HomeScreenState extends State<HomeScreen> {
               border: InputBorder.none,
               suffixIcon: IconButton(
                   onPressed: () => context
-                      .read<MusicCubit>()
-                      .fetchMusic(_searchController.text),
+                      .read<MusicEntitiesCubit>()
+                      .fetchMusicEntities(
+                        _searchController.text,
+                        context.read<MusicEntityTypeCubit>().state.entityType,
+                      ),
                   icon: const Icon(Icons.search_rounded))),
-          // style: TextStyle(
-          //   color: Colors.white,
-          // ),
         ),
+        actions: [
+          const SizedBox(width: 8.0),
+          BlocBuilder<MusicEntityTypeCubit, MusicEntityTypeState>(
+            builder: (context, state) {
+              return DropdownButton<EntityType>(
+                value: state.entityType,
+                onChanged:
+                    context.read<MusicEntityTypeCubit>().changeMusicEntityType,
+                items: EntityType.values.map((EntityType value) {
+                  return DropdownMenuItem<EntityType>(
+                    value: value,
+                    child: Text(value.stringValue),
+                  );
+                }).toList(),
+              );
+            },
+          )
+        ],
         centerTitle: true,
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: BlocBuilder<MusicCubit, MusicState>(
+        child: BlocBuilder<MusicEntitiesCubit, MusicEntitiesState>(
           builder: (context, state) {
-            if (state is LoadingState) {
+            if (state is MusicEntitiesLoadingState) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state is ErrorState) {
+            } else if (state is MusicEntitiesErrorState) {
               return const Center(
                 child: Icon(Icons.close),
               );
-            } else if (state is LoadedState) {
-              final musicList = state.musicList;
+            } else if (state is MusicEntitiesLoadedState) {
+              final musicEntities = state.musicEntitiesList;
 
               return ListView.builder(
-                  itemCount: musicList.length,
+                  itemCount: musicEntities.length,
                   itemBuilder: (context, index) {
-                    final album = musicList[index];
+                    final musicEntity = musicEntities[index];
                     return InkWell(
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => BlocProvider.value(
-                              value: adc.AlbumDetailsCubit(context.read<MusicRepository>()),
-                              child: const AlbumDetailsScreen()))),
+                              value: adc.AlbumDetailsCubit(
+                                  context.read<MusicRepository>()),
+                              child: const MusicEntityDetailsScreen()))),
                       child: Card(
                         child: ListTile(
-                          leading: album.mediumImage == null || album.mediumImage!.isEmpty
+                          leading: musicEntity.imageUrl.isEmpty
                               ? null
-                              : Image.network(album.mediumImage!),
-                          title: Text(album.name),
-                          subtitle: Text(album.artist),
+                              : Image.network(musicEntity.imageUrl),
+                          title: Text(musicEntity.title),
+                          subtitle: Text(musicEntity.subtitle ?? ''),
                         ),
                       ),
                     );

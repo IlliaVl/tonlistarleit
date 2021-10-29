@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:tonlistarleit/data/models/image_data.dart';
 
 class Album {
   late final String id;
@@ -19,7 +20,8 @@ class Album {
     required this.url,
     required this.streamable,
     required this.imageDataList,
-  }); // <artist>Weezer</artist>
+  });
+  // <artist>Weezer</artist>
   // <id>2025180</id>
   // <url>http://www.last.fm/music/Weezer/Make+Believe</url>
   // <image size="small">http://userserve-ak.last.fm/serve/34/8673675.jpg</image>
@@ -49,27 +51,6 @@ class Album {
       imageDataList: ((map['image'] ?? []) as List)
           .map((imageDataMap) => ImageData.fromMap(imageDataMap))
           .toList(),
-    );
-  }
-}
-
-class ImageData {
-  late final String textUrl;
-  late final String size;
-
-  ImageData({required this.textUrl, required this.size});
-
-  Map<String, dynamic> toMap() {
-    return {
-      '#text': textUrl,
-      'size': size,
-    };
-  }
-
-  factory ImageData.fromMap(Map<String, dynamic> map) {
-    return ImageData(
-      textUrl: map['#text'] ?? '',
-      size: map['size'] ?? '',
     );
   }
 }
