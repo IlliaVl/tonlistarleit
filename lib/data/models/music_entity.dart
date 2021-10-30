@@ -1,14 +1,15 @@
+import 'package:equatable/equatable.dart';
 import 'package:tonlistarleit/common/enums.dart';
 
-class MusicEntity {
-  late final EntityType type;
-  late final String title;
-  late final String titleKey;
-  late final String? subtitle;
-  late final String? subtitleKey;
-  late final String imageUrl;
+class MusicEntity extends Equatable {
+  final EntityType type;
+  final String title;
+  final String titleKey;
+  final String? subtitle;
+  final String? subtitleKey;
+  final String imageUrl;
 
-  MusicEntity({
+  const MusicEntity({
     required this.type,
     required this.title,
     required this.titleKey,
@@ -16,4 +17,14 @@ class MusicEntity {
     this.subtitleKey,
     required this.imageUrl,
   });
+
+  @override
+  List<Object?> get props => [
+        type,
+        title,
+        titleKey,
+        subtitle,
+        subtitleKey,
+        imageUrl,
+      ];
 }

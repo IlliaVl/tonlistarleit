@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:tonlistarleit/common/enums.dart';
 import 'package:tonlistarleit/data/models/music_entity.dart';

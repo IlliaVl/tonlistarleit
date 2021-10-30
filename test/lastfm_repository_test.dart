@@ -16,7 +16,7 @@ void main() {
     test('Retrieving albums', () async {
       List<MusicEntity> albums =
           await lastfmRepository.getMusicEntities('', EntityType.album);
-      expect(albums.length, 50);
+      expect(albums.length, 2);
       expect(albums[0].title, 'some rap songs');
       expect(albums[0].subtitle, 'Earl Sweatshirt');
       expect(albums[0].imageUrl,
@@ -26,7 +26,7 @@ void main() {
     test('Retrieving artists', () async {
       List<MusicEntity> artists =
           await lastfmRepository.getMusicEntities('', EntityType.artist);
-      expect(artists.length, 4);
+      expect(artists.length, 2);
       expect(artists[0].title, 'Something Corporate');
       expect(artists[0].subtitle, null);
       expect(artists[0].imageUrl,
@@ -36,7 +36,7 @@ void main() {
     test('Retrieving tracks', () async {
       List<MusicEntity> tracks =
           await lastfmRepository.getMusicEntities('', EntityType.track);
-      expect(tracks.length, 4);
+      expect(tracks.length, 2);
       expect(tracks[0].title, 'Somebody That I Used To Know');
       expect(tracks[0].subtitle, 'Gotye');
       expect(tracks[0].imageUrl,
@@ -45,7 +45,7 @@ void main() {
 
     test('Retrieving album details', () async {
       MusicEntityDetails album = await lastfmRepository.getMusicEntityDetails(
-          MusicEntity(
+          const MusicEntity(
               type: EntityType.album,
               title: 'title',
               titleKey: 'titleKey',
@@ -61,7 +61,7 @@ void main() {
 
     test('Retrieving track details', () async {
       MusicEntityDetails track = await lastfmRepository.getMusicEntityDetails(
-          MusicEntity(
+          const MusicEntity(
               type: EntityType.track,
               title: 'title',
               titleKey: 'titleKey',
@@ -75,14 +75,15 @@ void main() {
 
     test('Retrieving artist details', () async {
       MusicEntityDetails artist = await lastfmRepository.getMusicEntityDetails(
-          MusicEntity(
+          const MusicEntity(
               type: EntityType.artist,
               title: 'title',
               titleKey: 'titleKey',
               imageUrl: 'imageUrl'));
       expect(artist.title, 'Deep Blue Something');
       expect(artist.titleKey, EntityType.artist.stringValue);
-      expect(artist.subtitle, 'Deep Blue Something is an American rock band...');
+      expect(
+          artist.subtitle, 'Deep Blue Something is an American rock band...');
       expect(artist.subtitleKey, 'bio');
       expect(artist.imageUrl,
           'https://lastfm.freetls.fastly.net/i/u/300x300/2a96cbd8b46e442fc41c2b86b821562f.png');

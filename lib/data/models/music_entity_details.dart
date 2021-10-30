@@ -1,7 +1,7 @@
 import 'package:tonlistarleit/data/models/music_entity.dart';
 
 class MusicEntityDetails extends MusicEntity {
-  MusicEntityDetails(
+  const MusicEntityDetails(
     type,
     title,
     titleKey,
