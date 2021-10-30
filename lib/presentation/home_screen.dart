@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tonlistarleit/common/enums.dart';
 import 'package:tonlistarleit/data/repositories/music_repository.dart';
-import 'package:tonlistarleit/logic/album_details_cubit.dart' as adc;
+import 'package:tonlistarleit/logic/music_entity_details_cubit.dart';
 import 'package:tonlistarleit/logic/music_entities_cubit.dart';
 import 'package:tonlistarleit/logic/music_entity_type_cubit.dart';
 import 'package:tonlistarleit/presentation/music_entity_details_screen.dart';
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
-              hintText: 'type in journal name...',
+              hintText: 'Type in name...',
               hintStyle: const TextStyle(
                 fontSize: 18,
                 fontStyle: FontStyle.italic,
@@ -93,8 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     return InkWell(
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => BlocProvider.value(
-                              value: adc.AlbumDetailsCubit(
-                                  context.read<MusicRepository>()),
+                              value: MusicEntityDetailsCubit(
+                                context.read<MusicRepository>(),
+                              )..getMusicEntityDetails(musicEntity),
                               child: const MusicEntityDetailsScreen()))),
                       child: Card(
                         child: ListTile(

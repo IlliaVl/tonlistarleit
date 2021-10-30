@@ -1,4 +1,7 @@
+import 'package:tonlistarleit/common/enums.dart';
+
 class MusicEntity {
+  late final EntityType type;
   late final String title;
   late final String titleKey;
   late final String? subtitle;
@@ -6,6 +9,7 @@ class MusicEntity {
   late final String imageUrl;
 
   MusicEntity({
+    required this.type,
     required this.title,
     required this.titleKey,
     this.subtitle,
