@@ -7,6 +7,7 @@ class MusicEntity extends Equatable {
   final String titleKey;
   final String? subtitle;
   final String? subtitleKey;
+  final String? url;
   final String imageUrl;
 
   const MusicEntity({
@@ -15,7 +16,8 @@ class MusicEntity extends Equatable {
     required this.titleKey,
     this.subtitle,
     this.subtitleKey,
-    required this.imageUrl,
+    this.url,
+    required this.imageUrl, List props = const []
   });
 
   @override
@@ -25,6 +27,7 @@ class MusicEntity extends Equatable {
         titleKey,
         subtitle,
         subtitleKey,
+        url,
         imageUrl,
       ];
 }

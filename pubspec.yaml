@@ -39,6 +39,7 @@ dependencies:
   test: ^1.18.2
   bloc_test: ^8.3.0
   equatable: ^2.0.3
+  url_launcher: ^6.0.12
 
 dev_dependencies:
 #  flutter_test:

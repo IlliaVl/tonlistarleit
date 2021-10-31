@@ -8,22 +8,21 @@ import 'package:tonlistarleit/data/models/music_entity.dart';
 import 'package:tonlistarleit/data/models/music_entity_raw.dart';
 import 'package:tonlistarleit/data/models/track_details_raw.dart';
 import 'package:tonlistarleit/data/models/track_raw.dart';
+import 'package:tonlistarleit/data/models/tag.dart' as pure_tag;
 
 class LastfmRepository {
   LastfmRepository({LastfmApi? musicApi}) : _musicApi = musicApi ?? LastfmApi();
 
   final LastfmApi _musicApi;
 
-  Future<List<MusicEntity>> getMusicEntities(
-    String searchString,
-    EntityType entityType,
-  ) async {
+  Future<List<MusicEntity>> getMusicEntities(String searchString,
+      EntityType entityType,) async {
     final responseJson = await _musicApi.getMusicEntities(
       searchString,
       entityType,
     );
     final entitiesJsonList = responseJson['results']
-        ?['${entityType.stringValue}matches']?[entityType.stringValue] as List;
+    ?['${entityType.stringValue}matches']?[entityType.stringValue] as List;
 
     return entitiesJsonList
         .map((entityJson) => _getEntity(entityJson, entityType))
@@ -79,6 +78,9 @@ class LastfmRepository {
       case EntityType.album:
         final albumDetailsRaw = AlbumDetailsRaw.fromJson(responseJson);
         musicEntityDetails = MusicEntityDetails(
+          albumDetailsRaw.album?.tags?.tag
+              ?.map((tagRaw) =>
+              pure_tag.Tag(name: tagRaw.name, url: tagRaw.url)).toList(),
           entityType,
           albumDetailsRaw.album?.name ?? '',
           entityType.stringValue,
@@ -87,22 +89,30 @@ class LastfmRepository {
           albumDetailsRaw.album?.extralargeImage ??
               albumDetailsRaw.album?.largeImage ??
               '',
+          albumDetailsRaw.album?.url,
         );
         break;
       case EntityType.track:
         final trackDetailsRaw = TrackDetailsRaw.fromJson(responseJson);
         musicEntityDetails = MusicEntityDetails(
+          trackDetailsRaw.track?.toptags?.tag
+              ?.map((tagRaw) =>
+              pure_tag.Tag(name: tagRaw.name, url: tagRaw.url)).toList(),
           entityType,
           trackDetailsRaw.track?.name ?? '',
           entityType.stringValue,
           trackDetailsRaw.track?.artist?.name ?? '',
           EntityType.artist.stringValue,
           '',
+          trackDetailsRaw.track?.url,
         );
         break;
       case EntityType.artist:
         final artistDetailsRaw = ArtistDetailsRaw.fromJson(responseJson);
         musicEntityDetails = MusicEntityDetails(
+          artistDetailsRaw.artist?.tags?.tag
+              ?.map((tagRaw) =>
+              pure_tag.Tag(name: tagRaw.name, url: tagRaw.url)).toList(),
           entityType,
           artistDetailsRaw.artist?.name ?? '',
           entityType.stringValue,
@@ -111,6 +121,7 @@ class LastfmRepository {
           artistDetailsRaw.artist?.extralargeImage ??
               artistDetailsRaw.artist?.largeImage ??
               '',
+          artistDetailsRaw.artist?.url,
         );
         break;
     }

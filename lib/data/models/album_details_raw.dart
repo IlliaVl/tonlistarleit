@@ -85,7 +85,7 @@ class Album {
 }
 
 class Tags {
-  late final List<Tag> tag;
+  late final List<Tag>? tag;
 
   Tags({required this.tag});
 
@@ -93,12 +93,12 @@ class Tags {
     if (json['tag'] != null && json['tag'] is! String) {
       tag = <Tag>[];
       json['tag'].forEach((v) {
-        tag.add(Tag.fromJson(v));
+        tag!.add(Tag.fromJson(v));
       });
     }
   }
 
-  Map<String, dynamic> toJson() => {'tag': tag.map((v) => v.toJson()).toList()};
+  Map<String, dynamic> toJson() => {'tag': tag?.map((v) => v.toJson()).toList()};
 }
 
 class Tag {
@@ -159,7 +159,7 @@ class Tracks {
 
 class Track {
   late final Streamable? streamable;
-  late final int duration;
+  late final int? duration;
   late final String url;
   late final String name;
   late final Attr? attr;

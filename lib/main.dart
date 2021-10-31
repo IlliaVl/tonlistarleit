@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final trackRaw = TrackRaw.fromMap({'name': 'track1', 'artist': 'artist1'});
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -31,9 +30,5 @@ class MyApp extends StatelessWidget {
       ),
       home: const HomeScreen(title: 'Flutter Demo Home Page'),
     );
-  }
-
-  test(MusicEntityRaw musicEntityRaw) {
-    final key = musicEntityRaw.key1;
   }
 }

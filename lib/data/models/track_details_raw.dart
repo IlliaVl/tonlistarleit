@@ -172,7 +172,7 @@ class Image {
 }
 
 class Toptags {
-  late final List<Tag> tag;
+  late final List<Tag>? tag;
 
   Toptags({required this.tag});
 
@@ -180,12 +180,12 @@ class Toptags {
     if (json['tag'] != null && json['tag'] is! String) {
       tag = <Tag>[];
       json['tag'].forEach((v) {
-        tag.add(Tag.fromJson(v));
+        tag!.add(Tag.fromJson(v));
       });
     }
   }
 
-  Map<String, dynamic> toJson() => {'tag': tag.map((v) => v.toJson()).toList()};
+  Map<String, dynamic> toJson() => {'tag': tag?.map((v) => v.toJson()).toList()};
 }
 
 class Tag {

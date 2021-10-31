@@ -7,19 +7,8 @@ class AlbumRaw extends MusicEntityRaw {
     return AlbumRaw(
       artist: map['artist'] ?? '',
       map: map,
-      // name: map['name'] ?? '',
-      // imageDataList: ((map['image'] ?? []) as List)
-      //     .map((imageDataMap) => ImageData.fromMap(imageDataMap))
-      //     .toList(),
     );
   }
-
-  //
-  // AlbumRaw({
-  //   required this.artist,
-  //   name,
-  //   imageDataList,
-  // }) : super.fromMap(name: name, imageDataList: imageDataList);
 
   AlbumRaw({
     required this.artist,
