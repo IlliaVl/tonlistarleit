@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:tonlistarleit/common/enums.dart';
+import 'package:tonlistarleit/common/music_entity_fetch_failure.dart';
 import 'package:tonlistarleit/data/models/music_entity.dart';
 import 'package:tonlistarleit/data/repositories/music_repository.dart';
 
@@ -23,8 +24,8 @@ class MusicEntitiesCubit extends Cubit<MusicEntitiesState> {
         entityType,
       );
       emit(MusicEntitiesLoadedState(musicEntities));
-    } catch (e) {
-      emit(MusicEntitiesErrorState());
+    } on MusicEntityFetchFailure catch (e, __) {
+      emit(MusicEntitiesErrorState(e.message));
     }
   }
 }

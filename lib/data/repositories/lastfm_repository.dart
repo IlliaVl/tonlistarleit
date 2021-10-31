@@ -25,9 +25,6 @@ class LastfmRepository {
     final entitiesJsonList = responseJson['results']
         ?['${entityType.stringValue}matches']?[entityType.stringValue] as List;
 
-    if (entitiesJsonList.isEmpty) {
-      throw MusicEntityNotFoundFailure();
-    }
     return entitiesJsonList
         .map((entityJson) => _getEntity(entityJson, entityType))
         .toList();

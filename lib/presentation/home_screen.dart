@@ -28,11 +28,17 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _searchController = TextEditingController();
 
+  _search(String searchText) =>
+      context.read<MusicEntitiesCubit>().fetchMusicEntities(
+          searchText, context.read<MusicEntityTypeCubit>().state.entityType);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
+          textInputAction: TextInputAction.search,
+          onSubmitted: _search,
           controller: _searchController,
           decoration: InputDecoration(
               filled: true,
@@ -44,12 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               border: InputBorder.none,
               suffixIcon: IconButton(
-                  onPressed: () => context
-                      .read<MusicEntitiesCubit>()
-                      .fetchMusicEntities(
-                        _searchController.text,
-                        context.read<MusicEntityTypeCubit>().state.entityType,
-                      ),
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    _search(_searchController.text);
+                  },
                   icon: const Icon(Icons.search_rounded))),
         ),
         actions: [
@@ -73,7 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
       body: Center(
-        child: BlocBuilder<MusicEntitiesCubit, MusicEntitiesState>(
+        child: BlocConsumer<MusicEntitiesCubit, MusicEntitiesState>(
+          listener: (context, state) => state is MusicEntitiesErrorState
+              ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(state.message,
+                      style: const TextStyle(color: Colors.red)),
+                ))
+              : null,
           builder: (context, state) {
             if (state is MusicEntitiesLoadingState) {
               return const Center(
@@ -81,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             } else if (state is MusicEntitiesErrorState) {
               return const Center(
-                child: Icon(Icons.close),
+                child: Icon(Icons.close, color: Colors.red),
               );
             } else if (state is MusicEntitiesLoadedState) {
               final musicEntities = state.musicEntitiesList;

@@ -6,7 +6,9 @@ class ArtistDetailsRaw {
   ArtistDetailsRaw({required this.artist});
 
   ArtistDetailsRaw.fromJson(Map<String, dynamic> json) {
-    artist = json['artist'] != null ? Artist.fromJson(json['artist']) : null;
+    artist = json['artist'] != null && json['artist'] is! String
+        ? Artist.fromJson(json['artist'])
+        : null;
   }
 
   Map<String, dynamic> toJson() => {'artist': artist?.toJson()};
@@ -36,19 +38,17 @@ class Artist {
       required this.tags,
       required this.bio});
 
-  String? get extralargeImage => image
-      .firstWhereOrNull((image) => image.size == 'extralarge')
-      ?.text;
+  String? get extralargeImage =>
+      image.firstWhereOrNull((image) => image.size == 'extralarge')?.text;
 
-  String? get largeImage => image
-      .firstWhereOrNull((image) => image.size == 'large')
-      ?.text;
+  String? get largeImage =>
+      image.firstWhereOrNull((image) => image.size == 'large')?.text;
 
   Artist.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     mbid = json['mbid'];
     url = json['url'];
-    if (json['image'] != null) {
+    if (json['image'] != null && json['image'] is! String) {
       image = <Image>[];
       json['image'].forEach((v) {
         image.add(Image.fromJson(v));
@@ -56,10 +56,18 @@ class Artist {
     }
     streamable = json['streamable'];
     ontour = json['ontour'];
-    stats = Stats.fromJson(json['stats']);
-    similar = Similar.fromJson(json['similar']);
-    tags = Tags.fromJson(json['tags']);
-    bio = Bio.fromJson(json['bio']);
+    stats = json['stats'] != null && json['stats'] is! String
+        ? Stats.fromJson(json['stats'])
+        : null;
+    similar = json['similar'] != null && json['similar'] is! String
+        ? Similar.fromJson(json['similar'])
+        : null;
+    tags = json['tags'] != null && json['tags'] is! String
+        ? Tags.fromJson(json['tags'])
+        : null;
+    bio = json['bio'] != null && json['bio'] is! String
+        ? Bio.fromJson(json['bio'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -122,7 +130,7 @@ class Similar {
   Similar({required this.artist});
 
   Similar.fromJson(Map<String, dynamic> json) {
-    if (json['artist'] != null) {
+    if (json['artist'] != null && json['artist'] is! String) {
       artist = <ArtistSimilar>[];
       json['artist'].forEach((v) {
         artist.add(ArtistSimilar.fromJson(v));
@@ -147,7 +155,7 @@ class ArtistSimilar {
   ArtistSimilar.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     url = json['url'];
-    if (json['image'] != null) {
+    if (json['image'] != null && json['image'] is! String) {
       image = <Image>[];
       json['image'].forEach((v) {
         image.add(Image.fromJson(v));
@@ -170,7 +178,7 @@ class Tags {
   Tags({required this.tag});
 
   Tags.fromJson(Map<String, dynamic> json) {
-    if (json['tag'] != null) {
+    if (json['tag'] != null && json['tag'] is! String) {
       tag = <Tag>[];
       json['tag'].forEach((v) {
         tag.add(Tag.fromJson(v));

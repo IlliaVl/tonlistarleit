@@ -6,7 +6,9 @@ class AlbumDetailsRaw {
   AlbumDetailsRaw({required this.album});
 
   AlbumDetailsRaw.fromJson(Map<String, dynamic> json) {
-    album = json['album'] != null ? Album.fromJson(json['album']) : null;
+    album = json['album'] != null && json['album'] is! String
+        ? Album.fromJson(json['album'])
+        : null;
   }
 
   Map<String, dynamic> toJson() => {'album': album?.toJson()};
@@ -36,30 +38,34 @@ class Album {
       required this.listeners,
       required this.wiki});
 
-  String? get extralargeImage => image
-      .firstWhereOrNull((image) => image.size == 'extralarge')
-      ?.text;
+  String? get extralargeImage =>
+      image.firstWhereOrNull((image) => image.size == 'extralarge')?.text;
 
-  String? get largeImage => image
-      .firstWhereOrNull((image) => image.size == 'large')
-      ?.text;
+  String? get largeImage =>
+      image.firstWhereOrNull((image) => image.size == 'large')?.text;
 
   Album.fromJson(Map<String, dynamic> json) {
     artist = json['artist'];
     mbid = json['mbid'];
-    tags = json['tags'] != null ? Tags.fromJson(json['tags']) : null;
+    tags = json['tags'] != null && json['tags'] is! String
+        ? Tags.fromJson(json['tags'])
+        : null;
     playcount = json['playcount'];
-    if (json['image'] != null) {
+    if (json['image'] != null && json['image'] is! String) {
       image = <Image>[];
       json['image'].forEach((v) {
         image.add(Image.fromJson(v));
       });
     }
-    tracks = json['tracks'] != null ? Tracks.fromJson(json['tracks']) : null;
+    tracks = json['tracks'] != null && json['tracks'] is! String
+        ? Tracks.fromJson(json['tracks'])
+        : null;
     url = json['url'];
     name = json['name'];
     listeners = json['listeners'];
-    wiki = json['wiki'] != null ? Wiki.fromJson(json['wiki']) : null;
+    wiki = json['wiki'] != null && json['wiki'] is! String
+        ? Wiki.fromJson(json['wiki'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -84,7 +90,7 @@ class Tags {
   Tags({required this.tag});
 
   Tags.fromJson(Map<String, dynamic> json) {
-    if (json['tag'] != null) {
+    if (json['tag'] != null && json['tag'] is! String) {
       tag = <Tag>[];
       json['tag'].forEach((v) {
         tag.add(Tag.fromJson(v));
@@ -139,7 +145,7 @@ class Tracks {
   Tracks({required this.track});
 
   Tracks.fromJson(Map<String, dynamic> json) {
-    if (json['track'] != null) {
+    if (json['track'] != null && json['track'] is! String) {
       track = <Track>[];
       json['track'].forEach((v) {
         track.add(Track.fromJson(v));

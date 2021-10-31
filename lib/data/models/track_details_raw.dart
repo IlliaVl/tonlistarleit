@@ -4,7 +4,9 @@ class TrackDetailsRaw {
   TrackDetailsRaw({required this.track});
 
   TrackDetailsRaw.fromJson(Map<String, dynamic> json) {
-    track = json['track'] != null ? Track.fromJson(json['track']) : null;
+    track = json['track'] != null && json['track'] is! String
+        ? Track.fromJson(json['track'])
+        : null;
   }
 
   Map<String, dynamic> toJson() => {'track': track?.toJson()};
@@ -38,16 +40,23 @@ class Track {
     name = json['name'];
     url = json['url'];
     duration = json['duration'];
-    streamable = json['streamable'] != null
+    streamable = json['streamable'] != null && json['streamable'] is! String
         ? Streamable.fromJson(json['streamable'])
         : null;
     listeners = json['listeners'];
     playcount = json['playcount'];
-    artist = json['artist'] != null ? Artist.fromJson(json['artist']) : null;
-    album = json['album'] != null ? Album.fromJson(json['album']) : null;
-    toptags =
-        json['toptags'] != null ? Toptags.fromJson(json['toptags']) : null;
-    wiki = json['wiki'] != null ? Wiki.fromJson(json['wiki']) : null;
+    artist = json['artist'] != null && json['artist'] is! String
+        ? Artist.fromJson(json['artist'])
+        : null;
+    album = json['album'] != null && json['album'] is! String
+        ? Album.fromJson(json['album'])
+        : null;
+    toptags = json['toptags'] != null && json['toptags'] is! String
+        ? Toptags.fromJson(json['toptags'])
+        : null;
+    wiki = json['wiki'] != null && json['wiki'] is! String
+        ? Wiki.fromJson(json['wiki'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -125,7 +134,7 @@ class Album {
     artist = json['artist'];
     title = json['title'];
     url = json['url'];
-    if (json['image'] != null) {
+    if (json['image'] != null && json['image'] is! String) {
       image = <Image>[];
       json['image'].forEach((v) {
         image.add(Image.fromJson(v));
@@ -168,7 +177,7 @@ class Toptags {
   Toptags({required this.tag});
 
   Toptags.fromJson(Map<String, dynamic> json) {
-    if (json['tag'] != null) {
+    if (json['tag'] != null && json['tag'] is! String) {
       tag = <Tag>[];
       json['tag'].forEach((v) {
         tag.add(Tag.fromJson(v));

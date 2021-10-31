@@ -2,12 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:tonlistarleit/common/enums.dart';
-
-/// Exception thrown when getAlbums fails.
-class MusicEntityRequestFailure implements Exception {}
-
-/// Exception thrown when album is not found.
-class MusicEntityNotFoundFailure implements Exception {}
+import 'package:tonlistarleit/common/music_entity_fetch_failure.dart';
 
 class LastfmApi {
   LastfmApi({http.Client? httpClient})
@@ -17,10 +12,8 @@ class LastfmApi {
   static const _baseUrl = 'ws.audioscrobbler.com';
   final http.Client _httpClient;
 
-  Uri _getRequest(
-    String method,
-    Map<String, String> additionalQueryParameters,
-  ) =>
+  Uri _getRequest(String method,
+      Map<String, String> additionalQueryParameters,) =>
       Uri.https(
         _baseUrl,
         '/2.0/',
@@ -32,51 +25,34 @@ class LastfmApi {
         },
       );
 
-  Map<String, dynamic> _parseResponse(String body) {
-    final bodyJson = jsonDecode(body) as Map<String, dynamic>;
-
-    if (bodyJson.isEmpty) {
-      throw MusicEntityNotFoundFailure();
-    }
-
-    return bodyJson;
-  }
-
-  Future<Map<String, dynamic>> _call(
-    String method,
-    Map<String, String> additionalQueryParameters,
-  ) async {
+  Future<Map<String, dynamic>> _call(String method,
+      Map<String, String> additionalQueryParameters,) async {
     final response = await _httpClient.get(_getRequest(
       method,
       additionalQueryParameters,
     ));
 
+    Map<String, dynamic> bodyJson;
+    try {
+      bodyJson = jsonDecode(response.body) as Map<String, dynamic>;
+    } catch (_) {
+      throw const MusicEntityFetchFailure();
+    }
     if (response.statusCode != 200) {
-      throw MusicEntityRequestFailure();
+      throw MusicEntityFetchFailure(bodyJson['message']);
     }
-
-    final bodyJson = jsonDecode(response.body) as Map<String, dynamic>;
-
-    if (bodyJson.isEmpty) {
-      throw MusicEntityNotFoundFailure();
-    }
-
     return bodyJson;
   }
 
-  Future<Map<String, dynamic>> getMusicEntities(
-    String searchText,
-    EntityType entityType,
-  ) async =>
+  Future<Map<String, dynamic>> getMusicEntities(String searchText,
+      EntityType entityType,) async =>
       await _call(
         '${entityType.stringValue}.search',
         {entityType.stringValue: searchText},
       );
 
-  Future<Map<String, dynamic>> getMusicEntityDetails(
-    EntityType entityType,
-    Map<String, String> additionalQueryParameters,
-  ) async =>
+  Future<Map<String, dynamic>> getMusicEntityDetails(EntityType entityType,
+      Map<String, String> additionalQueryParameters,) async =>
       await _call(
         '${entityType.stringValue}.getinfo',
         additionalQueryParameters,

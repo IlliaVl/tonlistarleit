@@ -13,7 +13,13 @@ class MusicEntityDetailsScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Center(
-        child: BlocBuilder<MusicEntityDetailsCubit, MusicEntityDetailsState>(
+        child: BlocConsumer<MusicEntityDetailsCubit, MusicEntityDetailsState>(
+          listener: (context, state) => state is MusicEntityDetailsErrorState
+              ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(state.message,
+                style: const TextStyle(color: Colors.red)),
+          ))
+              : null,
           builder: (context, state) {
             if (state is MusicEntityDetailsLoadingState) {
               return const Center(
@@ -21,7 +27,7 @@ class MusicEntityDetailsScreen extends StatelessWidget {
               );
             } else if (state is MusicEntityDetailsErrorState) {
               return const Center(
-                child: Icon(Icons.close),
+                child: Icon(Icons.close, color: Colors.red),
               );
             } else if (state is MusicEntityDetailsLoadedState) {
               final musicEntityDetails = state.musicEntityDetails;

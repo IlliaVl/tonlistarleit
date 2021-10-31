@@ -19,11 +19,14 @@ class MusicEntitiesLoadedState extends MusicEntitiesState {
   final List<MusicEntity> musicEntitiesList;
 
   @override
-  // TODO: implement props
   List<Object?> get props => [musicEntitiesList];
 }
 
 class MusicEntitiesErrorState extends MusicEntitiesState {
+  final String message;
+
+  MusicEntitiesErrorState(this.message);
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }
